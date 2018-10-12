@@ -42,6 +42,7 @@ cd bin/x86_64/linux/release
 ```
 
 ### 3 Install [cuDNN](https://developer.nvidia.com/rdp/cudnn-download)
+![cuDNN](img/cudnn.png)
 ```
 sudo dpkg -i libcudnn7_7.3.1.20-1+cuda10.0_amd64.deb
 sudo dpkg -i libcudnn7-dev_7.3.1.20-1+cuda10.0_amd64.deb
