@@ -21,13 +21,13 @@ Go to "All Settings > Additional Drivers" and you should see a list of all avail
 
 ```
 # remove old CUDA
-sudo apt-get --purge remove cuda
+sudo apt-get --purge remove cuda cuda-libraries-10-0
 
 # install new CUDA
-sudo dpkg -i cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64
+sudo dpkg -i cuda-repo-ubuntu1604-10-0-local-10.0.130-410.48_1.0-1_amd64.deb
 sudo apt-key add /var/cuda-repo-10-0-local-10.0.130-410.48/7fa2af80.pub 
 sudo apt-get update
-sudo apt-get install cuda
+sudo apt-get install cuda cuda-libraries-10-0
 
 # add CUDA path to PATH variable
 # export PATH=/usr/local/cuda/bin:$PATH
