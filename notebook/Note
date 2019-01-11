@@ -1,0 +1,10 @@
+#### How to use jupyter
+source ~/Python/keras/bin/activate
+jupyter notebook
+
+#### How to check GPU status in real time
+gpustat -i
+
+#### How to free the GPU memory
+run nvidia-smi to check the GPU memory usage. Kill the Process using great amount of memory.
+
