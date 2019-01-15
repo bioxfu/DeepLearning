@@ -23,6 +23,7 @@ bazel-bin/tensorflow/tools/pip_package/build_pip_package ~/tensorflow/1.12/bin/
 virtualenv ~/Python/keras
 source ~/Python/keras/bin/activate
 pip install ~/tensorflow/1.12/bin/tensorflow-1.12.0rc0-cp27-cp27mu-linux_x86_64.whl
-pip install h5py graphviz pydot keras jupyter pandas matplotlib
+pip install h5py graphviz pydot keras jupyter pandas matplotlib pillow
 ```
+
 
