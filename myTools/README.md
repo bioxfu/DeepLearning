@@ -75,3 +75,67 @@ python bin/extract_features_with_VGG16.py -d datasets/animals -o output/animals_
 
 python bin/logistic_regression_on_extracted_features.py --db output/animals_VGG16_features.hdf5 --model output/animals_logreg.cpickle
 ```
+
+#### Rank-1 and Rank-5 Accuracies
+```
+python bin/rank_accuracy.py --db output/animals_VGG16_features.hdf5 --model output/animals_logreg.cpickle
+```
+
+#### Fine-tuning
+```
+#inspect model's layers
+python bin/inspect_model_layers.py
+python bin/inspect_model_layers.py --include-top -1
+
+# nework surgery and fine-tuning
+python bin/finetune_with_VGG16.py -d datasets/flower_photos -m output/finetune_with_VGG16_flowers_model.hdf5
+```
+
+#### Ensembl of CNNs
+```
+# train
+python bin/ensembl_minivggnet_train.py -o output/ensembl -m output/ensembl 
+
+# test
+python bin/ensembl_minivggnet_evaluate.py -m output/ensembl 
+```
+
+#### dogs_vs_cats
+```
+cd project/dogs_vs_cats
+# build HDF5 files
+python img2hdf5.py
+
+# train AlexNet
+python train_alexnet.py
+
+# evaluate AlexNet
+python evaluate_alexnet.py
+
+# extract features with ResNet
+python extract_features_with_ResNet.py --dataset ../../datasets/kaggle_dogs_vs_cats/train/ --output ../../datasets/kaggle_dogs_vs_cats/hdf5/features_ResNet.hdf5
+
+# traing a logistic regression classifier
+python logistic_regression_on_extracted_features.py --db ../../datasets/kaggle_dogs_vs_cats/hdf5/features_ResNet.hdf5 --model output/dogs_vs_cats.pickle
+```
+
+#### MiniGoogLeNet on CIFAR-10
+```
+python bin/minigooglenet_cifar10.py --output output --model output/minigooglenet_cifar10.hdf5
+```
+
+#### Tiny ImageNet
+```
+wget -c http://cs231n.stanford.edu/tiny-imagenet-200.zip
+
+cd project/deepergooglenet
+# build HDF5 files
+python img2hdf5.py
+
+# train
+python train_deepergooglenet.py --checkpoints output/checkpoints
+
+# test
+python evaluate_deepergooglenet.py 
+
+```

@@ -38,7 +38,7 @@ class TrainingMonitor(BaseLogger):
         # Check to see if the training history should be serialized to file
         if self.json_path is not None:
             f = open(self.json_path, "w")
-            f.write(json.dumps(self.H))
+            f.write(json.dumps(self.H["loss"]))
             f.close()
 
         # Ensure at least two epochs have passed before plotting

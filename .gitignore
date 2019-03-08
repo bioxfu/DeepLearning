@@ -1,5 +1,6 @@
+*.pyc
 *.deb
 *.pdf
 NVIDIA/NVIDIA_CUDA-10.0_Samples/
 NVIDIA/cudnn_samples_v7/
-
+*__pycache__/
