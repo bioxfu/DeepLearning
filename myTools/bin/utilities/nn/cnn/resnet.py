@@ -15,7 +15,7 @@ from keras import backend as K
 class ResNet:
     @staticmethod
     def residual_module(data, K, stride, chanDim, red=False, 
-        reg=0.0001, bnEps=2e-5, bnMon=0.9):
+        reg=0.0001, bnEps=2e-5, bnMom=0.9):
         # the shortcut branck of the ResNet module should be
         # initialize as the input (identity) data
         shortcut = data

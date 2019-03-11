@@ -139,3 +139,17 @@ python train_deepergooglenet.py --checkpoints output/checkpoints
 python evaluate_deepergooglenet.py 
 
 ```
+
+#### Train ResNet on CIFAR-10
+```
+# with ctrl+c method
+python bin/resnet_cifar10.py --checkpoints output/checkpoints -r 1e-1
+
+python bin/resnet_cifar10.py --checkpoints output/checkpoints --model output/checkpoints/lr_0.1/050-0.6917.hdf5 --start-epoch 50 -r 1e-2
+
+python bin/resnet_cifar10.py --checkpoints output/checkpoints --model output/checkpoints/lr_0.01/019-0.6052.hdf5 --start-epoch 69 -r 1e-3
+
+# with learning rate decay
+python bin/resnet_cifar10_lr_decay.py --output output --model output/resnet_cifar10.hdf5 
+
+```
