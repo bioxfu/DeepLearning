@@ -8,21 +8,21 @@ from callback import TrainingMonitor
 from keras.callbacks import ModelCheckpoint
 import os
 
-def finetune(model, trainGen, valGen, batch_size, output_path, saved_model):
+def finetune(modelName, trainGen, valGen, batch_size, output_path, saved_model):
     
-    if model == 'VGG16':
+    if modelName == 'VGG16':
         baseModel = VGG16(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
-    elif model == 'VGG19':
+    elif modelName == 'VGG19':
         baseModel = VGG19(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
-    elif model == 'ResNet50':
+    elif modelName == 'ResNet50':
         baseModel = ResNet50(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
-    elif model == 'InceptionV3':
+    elif modelName == 'InceptionV3':
         baseModel = InceptionV3(weights="imagenet", include_top=False, input_tensor=Input(shape=(299, 299, 3)))
-    elif model == 'Xception':
+    elif modelName == 'Xception':
         baseModel = Xception(weights="imagenet", include_top=False, input_tensor=Input(shape=(299, 299, 3)))
 
     # initialilze the new head of the network, a set of FC layers followed by a softmax classifier
-    headModel = FCHeadNet.build(model, baseModel, trainGen.classes, 256)
+    headModel = FCHeadNet.build(modelName, baseModel, trainGen.classes, 256)
 
     # place the head FC model on top of the base model -- this will become the actual model we will train
     model = Model(inputs=baseModel.input, output=headModel)
@@ -37,8 +37,8 @@ def finetune(model, trainGen, valGen, batch_size, output_path, saved_model):
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
 
     # construct the set of callbacks
-    figure_path = os.path.sep.join([output_path, '{}_{}.png'.format(model, os.getpid())])
-    json_path = os.path.sep.join([output_path, "{}_{}.json".format(model, os.getpid())])
+    figure_path = os.path.sep.join([output_path, '{}_{}.png'.format(modelName, os.getpid())])
+    json_path = os.path.sep.join([output_path, "{}_{}.json".format(modelName, os.getpid())])
     monitor = TrainingMonitor(figure_path, json_path)
     checkpoint = ModelCheckpoint(saved_model, monitor="val_loss", mode="min", save_best_only=True, verbose=1)
     callbacks = [monitor, checkpoint]
