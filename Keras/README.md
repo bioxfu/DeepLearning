@@ -23,7 +23,7 @@ bazel build -c opt --config=cuda //tensorflow/tools/pip_package:build_pip_packag
 ```
 bazel-bin/tensorflow/tools/pip_package/build_pip_package ~/tensorflow/1.12/bin/
 pip install ~/tensorflow/1.12/bin/tensorflow-1.12.0rc0-cp35-cp35m-linux_x86_64.whl
-pip install graphviz pydot keras jupyter pandas matplotlib pillow sklearn libtiff imutils opencv-python progressbar scikit-image
+pip install graphviz pydot keras jupyter pandas matplotlib pillow sklearn libtiff imutils opencv-python progressbar scikit-image kaggle
 ```
 
 

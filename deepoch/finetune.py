@@ -12,12 +12,17 @@ def finetune(modelName, trainGen, valGen, batch_size, output_path, saved_model):
     
     if modelName == 'VGG16':
         baseModel = VGG16(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
+        unfreeze_layer = 15
     elif modelName == 'VGG19':
         baseModel = VGG19(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
     elif modelName == 'ResNet50':
         baseModel = ResNet50(weights="imagenet", include_top=False, input_tensor=Input(shape=(224, 224, 3)))
+        unfreeze_layer = 129
     elif modelName == 'InceptionV3':
         baseModel = InceptionV3(weights="imagenet", include_top=False, input_tensor=Input(shape=(299, 299, 3)))
+        # we chose to train the top 2 inception blocks, i.e. we will freeze
+        # the first 249 layers and unfreeze the rest:
+        unfreeze_layer = 249
     elif modelName == 'Xception':
         baseModel = Xception(weights="imagenet", include_top=False, input_tensor=Input(shape=(299, 299, 3)))
 
@@ -33,7 +38,7 @@ def finetune(modelName, trainGen, valGen, batch_size, output_path, saved_model):
 
     # compile our model
     print("[INFO]: Compiling model....")
-    optimizer = RMSprop(lr=1e-3)
+    optimizer = RMSprop(lr=1e-4)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
 
     # construct the set of callbacks
@@ -50,23 +55,22 @@ def finetune(modelName, trainGen, valGen, batch_size, output_path, saved_model):
         validation_data=valGen.generator(), 
         steps_per_epoch=trainGen.numImages//batch_size,
         validation_steps=valGen.numImages//batch_size, 
-        callbacks=callbacks, epochs=20, verbose=1)
+        callbacks=callbacks, epochs=5, verbose=1)
     
     # now that the head FC layers have been trained/initialized, lets
     # unfreeze the final set of CONV layers and make them trainable
-    # if classification accuracy continues to improve withou overfitting
+    # if classification accuracy continues to improve without overfitting
     # you may want to consider unfreezing more layers in the body
-    #for layer in baseModel.layers[15:]:
-    for layer in baseModel.layers:
+    for layer in baseModel.layers[unfreeze_layer:]:
         layer.trainable = True
 
     # for the changes to the model to take affect we need to recompile
     # the model, this time using SGD with a very small learning rate
     print("[INFO]: Re-compiling model....")
-    optimizer = SGD(lr=1e-3, decay=1e-6, momentum=0.9, nesterov=True)
+    optimizer = SGD(lr=1e-5, decay=1e-5/batch_size, momentum=0.9, nesterov=True)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
 
-    monitor = TrainingMonitor(fig_path, json_path, start_at=21)
+    monitor = TrainingMonitor(figure_path, json_path, start_at=6)
     callbacks = [monitor, checkpoint]
 
     # train the model again, this time fine-tuning both the final set

@@ -1,8 +1,11 @@
 # define the paths to the images directory
-IMAGES_PATH = "../datasets/kaggle_dogs_vs_cats/train"
+IMAGES_PATH = '../datasets/kaggle_dogs_vs_cats/train'
 
 # fine-tuning model
-PRE_TRAIN_MODELS = ['VGG16', 'VGG19', 'ResNet50', 'InceptionV3', 'Xception']
+#PRE_TRAIN_MODELS = ['VGG16', 'VGG19', 'ResNet50', 'InceptionV3', 'Xception']
+#PRE_TRAIN_MODELS = ['VGG16']
+#PRE_TRAIN_MODELS = ['InceptionV3']
+PRE_TRAIN_MODELS = ['ResNet50']
 
 # resize image keeping aspect ratio
 IMAGES_SIZE = {'VGG16': 224, 'VGG19': 224, 'ResNet50': 224, 'InceptionV3': 299, 'Xception': 299}
@@ -29,3 +32,7 @@ OUTPUT_PATH = 'output'
 
 BATCH_SIZE = 4
 
+# predict the independent test dataset for submission (optional)
+PREDICT_PATH = "../datasets/kaggle_dogs_vs_cats/test"
+PREDICT_HDF5 = '../datasets/kaggle_dogs_vs_cats/hdf5/predict.hdf5'
+PREDICT_CSV = 'output/submission.csv'
