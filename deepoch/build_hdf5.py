@@ -14,7 +14,8 @@ IMAGES_SIZE = 300
 
 # grab the paths to the images
 trainPaths = list(paths.list_images(config.IMAGES_PATH))
-trainLabels = [p.split(os.path.sep)[-1].split(".")[0] for p in trainPaths]
+trainLabels = [p.split(os.path.sep)[-2] for p in trainPaths]
+
 le = LabelEncoder()
 trainLabels = le.fit_transform(trainLabels)
 
