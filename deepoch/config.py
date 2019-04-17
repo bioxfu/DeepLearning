@@ -3,9 +3,9 @@ IMAGES_PATH = '../datasets/PlantVillage/train'
 
 # fine-tuning model
 #PRE_TRAIN_MODELS = ['VGG16', 'VGG19', 'ResNet50', 'InceptionV3', 'Xception']
-#PRE_TRAIN_MODELS = ['VGG16']
+PRE_TRAIN_MODELS = ['VGG16']
 #PRE_TRAIN_MODELS = ['InceptionV3']
-PRE_TRAIN_MODELS = ['ResNet50']
+#PRE_TRAIN_MODELS = ['ResNet50']
 
 # resize image keeping aspect ratio
 IMAGES_SIZE = {'VGG16': 224, 'VGG19': 224, 'ResNet50': 224, 'InceptionV3': 299, 'Xception': 299}
@@ -30,5 +30,9 @@ DATASET_MEAN = 'output/dataset_RGB_mean.json'
 # define the path to the output directory
 OUTPUT_PATH = 'output'
 
+# hyperparameters
 BATCH_SIZE = 4
-
+LEARNING_RATE_SHALLOW = 1e-4
+LEARNING_RATE_DEEP = 1e-6
+EPCHO_SHALLOW = 10
+EPCHO_DEEP = 100

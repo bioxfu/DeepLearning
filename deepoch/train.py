@@ -8,14 +8,18 @@ from preprocessor import MeanPreprocessor
 from preprocessor import ImageToArrayPreprocessor
 import config
 import json
-from finetune import finetune
+from finetune import finetune_shallow, finetune_deep
 import os
 
-def tain():
+def tain(finetune_depth):
     pre_train_models = config.PRE_TRAIN_MODELS
     image_size = config.IMAGES_SIZE
     batch_size = config.BATCH_SIZE
     output_path = config.OUTPUT_PATH
+    learning_rate_shallow = config.LEARNING_RATE_SHALLOW
+    learning_rate_deep = config.LEARNING_RATE_DEEP
+    epcho_shallow = config.EPCHO_SHALLOW
+    epcho_deep = config.EPCHO_DEEP
     # construct the training image generator for data augmentation
     aug = image_augment()
     
@@ -38,15 +42,19 @@ def tain():
         valGen = HDF5DatasetGenerator(config.VAL_HDF5, batchSize=batch_size,
             preprocessors=[sp, mp, itap], classes=config.NUM_CLASSES)
 
-        finetune(pre_train_model, trainGen, valGen, batch_size, output_path, saved_model)
+        if finetune_depth == 'shallow':
+            finetune_shallow(pre_train_model, trainGen, valGen, batch_size, output_path, 
+                saved_model, learning_rate_shallow, epcho_shallow)
+        elif finetune_depth == 'deep':
+            finetune_deep(pre_train_model, trainGen, valGen, batch_size, output_path, 
+                saved_model, learning_rate_deep, epcho_deep)
 
         trainGen.close()
         valGen.close()
 
-    if debug == True:
-        pass
 
     
 if __name__ == '__main__':
 
-    tain()
+    #tain(depth='shallow')
+    tain(finetune_depth='deep')
