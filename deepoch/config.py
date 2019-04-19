@@ -30,6 +30,8 @@ DATASET_MEAN = 'output/dataset_RGB_mean.json'
 # define the path to the output directory
 OUTPUT_PATH = 'output'
 
+CLASS_NAMES = 'output/class_names'
+
 # hyperparameters
 BATCH_SIZE = 4
 LEARNING_RATE_SHALLOW = 1e-4

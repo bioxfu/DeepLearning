@@ -16,6 +16,7 @@ image_size = config.IMAGES_SIZE
 batch_size = config.BATCH_SIZE
 output_path = config.OUTPUT_PATH
 saved_model = os.path.sep.join([output_path, '{}_model.hdf5'.format(pre_train_model)])
+model_accuracy = open(os.path.sep.join([output_path, '{}_model_accuracy'.format(pre_train_model)]), 'w')
 
 # load the RGB means for the training set
 means = json.loads(open(config.DATASET_MEAN).read())
@@ -33,6 +34,7 @@ model = load_model(saved_model)
 # initialize the testing dataset generators, then make predictions on
 # the testing data
 print("[INFO] predicting on test data (no crops)...")
+model_accuracy.write("[INFO] predicting on test data (no crops)...\n")
 testGen = HDF5DatasetGenerator(config.TEST_HDF5, batchSize=batch_size,
 	preprocessors=[sp, mp, itap], classes=config.NUM_CLASSES)
 predictions = model.predict_generator(testGen.generator(),
@@ -42,6 +44,9 @@ predictions = model.predict_generator(testGen.generator(),
 (rank1, rank5) = rank_accuracy(predictions, testGen.db["labels"])
 print("[INFO] rank-1: {:.2f}%".format(rank1 * 100))
 print("[INFO] rank-5: {:.2f}%".format(rank5 * 100))
+model_accuracy.write("[INFO] rank-1: {:.2f}%\n".format(rank1 * 100))
+model_accuracy.write("[INFO] rank-5: {:.2f}%\n".format(rank5 * 100))
+()
 testGen.close()
 
 # re-initialzie the testing set generator excluding the SimplePreprocessor
@@ -76,8 +81,11 @@ for (i, (images, labels)) in enumerate(testGen.generator(passes=1)):
 # compute the rank-1 accuracy
 pbar.finish()
 print("[INFO] predicting on test data (with crops)...")
+model_accuracy.write("[INFO] predicting on test data (with crops)...\n")
 (rank1, rank5) = rank_accuracy(predictions, testGen.db["labels"])
 print("[INFO] rank-1: {:.2f}%".format(rank1 * 100))
 print("[INFO] rank-5: {:.2f}%".format(rank5 * 100))
+model_accuracy.write("[INFO] rank-1: {:.2f}%\n".format(rank1 * 100))
+model_accuracy.write("[INFO] rank-5: {:.2f}%\n".format(rank5 * 100))
 testGen.close()
-
+model_accuracy.close()
