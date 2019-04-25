@@ -1,0 +1,1 @@
+source ~/Python/keras/bin/activate
