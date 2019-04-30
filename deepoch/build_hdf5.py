@@ -9,12 +9,16 @@ import progressbar
 import json
 import cv2
 import os
+import sys
 
 IMAGES_SIZE = 300
 
 # grab the paths to the images
 trainPaths = list(paths.list_images(config.IMAGES_PATH))
-trainLabels = [p.split(os.path.sep)[-2] for p in trainPaths]
+trainLabels = [p.split(os.path.sep)[config.LABEL_DIR] for p in trainPaths]
+#print(trainPaths[1:4])
+#print(trainLabels[1:4])
+#sys.exit()
 
 le = LabelEncoder()
 trainLabels = le.fit_transform(trainLabels)
