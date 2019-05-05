@@ -10,6 +10,7 @@ import config
 import json
 from finetune import finetune_shallow, finetune_deep
 import os
+import argparse
 
 def tain(finetune_depth):
     pre_train_models = config.PRE_TRAIN_MODELS
@@ -55,6 +56,7 @@ def tain(finetune_depth):
 
     
 if __name__ == '__main__':
-
-    #tain(depth='shallow')
-    tain(finetune_depth='deep')
+    ap = argparse.ArgumentParser()
+    ap.add_argument("-d", "--depth", required=True, help="shallow or deep")
+    args = vars(ap.parse_args())
+    tain(finetune_depth=args['depth'])

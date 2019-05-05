@@ -8,7 +8,9 @@ shinyServer(function(input, output) {
     contentType <- input$file$type
     r <- POST(url = api_host, body = list(image = upload_file(filepath)))
     dfm <- as.data.frame(matrix(unlist(content(r, "parsed", "application/json")$predictions), 
-                                ncol = 2, byrow = TRUE, dimnames = list(1:5, c('Class', 'Score'))))
+                                ncol = 2, byrow = TRUE))
+    rownames(dfm) <- 1:nrow(dfm)
+    colnames(dfm) <- c('Class', 'Score')
     list(dfm=dfm, path=filepath, type=contentType)
   })
 
@@ -17,7 +19,7 @@ shinyServer(function(input, output) {
   )
 
   output$image <- renderImage({
-    list(src = passData()$path, contentType=passData()$type, width=300)
+    list(src = passData()$path, contentType=passData()$type, width=600)
   }, deleteFile = TRUE)
 })
 

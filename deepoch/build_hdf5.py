@@ -22,6 +22,9 @@ trainLabels = [p.split(os.path.sep)[config.LABEL_DIR] for p in trainPaths]
 
 le = LabelEncoder()
 trainLabels = le.fit_transform(trainLabels)
+cls_names = open(config.CLASS_NAMES, 'w')
+cls_names.write('\n'.join(le.classes_))
+cls_names.close()
 
 # perform stratified sampling from the training set to build the 
 # testing split from the training data

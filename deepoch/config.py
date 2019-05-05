@@ -1,6 +1,6 @@
 # define the paths to the images directory
 IMAGES_PATH = '../datasets/BreakHis/BreaKHis_v1/histology_slides/breast'
-LABEL_DIR = -6
+LABEL_DIR = -2
 
 # fine-tuning model
 #PRE_TRAIN_MODELS = ['VGG16', 'VGG19', 'ResNet50', 'InceptionV3', 'Xception']
@@ -14,8 +14,8 @@ IMAGES_SIZE = {'VGG16': 224, 'VGG19': 224, 'ResNet50': 224, 'InceptionV3': 299, 
 # take a number of images from the training data and 
 # use them as validation and test data
 NUM_CLASSES = 2
-NUM_VAL_IMAGES = 700
-NUM_TEST_IMAGES = 700
+NUM_VAL_IMAGES = 200
+NUM_TEST_IMAGES = 200
 
 # define the path to the output training, validation, 
 # and testing HDF5 files
