@@ -11,7 +11,7 @@ import cv2
 import os
 import sys
 
-IMAGES_SIZE = 300
+IMAGES_SIZE = config.DB_IMAGES_SIZE
 
 # grab the paths to the images
 trainPaths = list(paths.list_images(config.IMAGES_PATH))

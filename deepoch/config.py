@@ -1,27 +1,25 @@
 # define the paths to the images directory
-IMAGES_PATH = '../datasets/BreakHis/BreaKHis_v1/histology_slides/breast'
+IMAGES_PATH = '../datasets/root_shoot/root/image'
 LABEL_DIR = -2
 
 # fine-tuning model
-#PRE_TRAIN_MODELS = ['VGG16', 'VGG19', 'ResNet50', 'InceptionV3', 'Xception']
-PRE_TRAIN_MODELS = ['VGG16']
-#PRE_TRAIN_MODELS = ['InceptionV3']
-#PRE_TRAIN_MODELS = ['ResNet50']
+TRAIN_MODELS = ['RootNet']
 
 # resize image keeping aspect ratio
-IMAGES_SIZE = {'VGG16': 224, 'VGG19': 224, 'ResNet50': 224, 'InceptionV3': 299, 'Xception': 299}
+DB_IMAGES_SIZE = 42
+IMAGES_SIZE = {'RootNet': 32}
 
 # take a number of images from the training data and 
 # use them as validation and test data
 NUM_CLASSES = 2
-NUM_VAL_IMAGES = 200
-NUM_TEST_IMAGES = 200
+NUM_VAL_IMAGES = 1000
+NUM_TEST_IMAGES = 1000
 
 # define the path to the output training, validation, 
 # and testing HDF5 files
-TRAIN_HDF5 = '../datasets/BreakHis/hdf5/train.hdf5'
-VAL_HDF5 = '../datasets/BreakHis/hdf5/val.hdf5'
-TEST_HDF5 = '../datasets/BreakHis/hdf5/test.hdf5'
+TRAIN_HDF5 = '../datasets/root_shoot/root/hdf5/train.hdf5'
+VAL_HDF5 = '../datasets/root_shoot/root/hdf5/val.hdf5'
+TEST_HDF5 = '../datasets/root_shoot/root/hdf5/test.hdf5'
 
 # define the path to the dataset mean which is used to store
 # the average red, green and blue pixel intensity value across
@@ -34,8 +32,7 @@ OUTPUT_PATH = 'output'
 CLASS_NAMES = 'output/class_names'
 
 # hyperparameters
-BATCH_SIZE = 4
-LEARNING_RATE_SHALLOW = 1e-4
-LEARNING_RATE_DEEP = 1e-6
-EPCHO_SHALLOW = 10
-EPCHO_DEEP = 100
+BATCH_SIZE = 64
+#LEARNING_RATE = 1e-3
+LEARNING_RATE = 1e-6
+EPCHO = 100

@@ -1,0 +1,43 @@
+# http://yingshu.ink/2017/01/12/Python3-5-Anaconda3-Caffe%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E6%A1%86%E6%9E%B6%E6%90%AD%E5%BB%BA/
+
+sudo apt-get update
+sudo apt-get install -y build-essential cmake git pkg-config
+sudo apt-get install -y libprotobuf-dev libleveldb-dev libsnappy-dev protobuf-compiler
+sudo apt-get install -y libatlas-base-dev 
+sudo apt-get install -y --no-install-recommends libboost-all-dev
+sudo apt-get install -y libgflags-dev libgoogle-glog-dev liblmdb-dev
+
+
+#
+protoc --version
+wget https://github.com/protocolbuffers/protobuf/releases/download/v3.5.0/protobuf-python-3.5.0.tar.gz
+tar xzf protobuf-python-3.5.0.tar.gz
+cd protobuf-3.5.0
+cd python
+python setup.py build
+python setup.py test
+python setup.py install
+
+
+#
+udo ln -s /usr/lib/x86_64-linux-gnu/libboost_python-py35.so.1.58.0 /usr/local/lib/libboost_python3.so
+echo '/usr/local/lib/'|sudo tee /etc/ld.so.conf.d/libboost_py3.conf
+sudo ldconfig
+
+
+#
+git clone https://github.com/BVLC/caffe.git
+cd caffe
+cp Makefile.config.example Makefile.config
+
+# remove some examples because they cannot be built
+rm -r examples/cpp_classification examples/mnist examples/siamese
+
+#
+make all -j $(($(nproc) + 1))
+make test -j $(($(nproc) + 1))
+make runtest -j $(($(nprpython/oc) + 1))
+make pycaffe -j $(($(nproc) + 1))
+
+# add the path of Caffe Python library to PYTHONPATH (see init.sh)
+

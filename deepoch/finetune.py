@@ -1,4 +1,4 @@
-from cnn import FCHeadNet
+from cnn import FCHeadNet, RootNet
 from keras.optimizers import RMSprop
 from keras.optimizers import SGD
 from keras.applications import VGG16, VGG19, InceptionV3, Xception, ResNet50
@@ -37,7 +37,7 @@ def finetune_shallow(modelName, trainGen, valGen, batch_size, output_path, saved
     # compile our model
     print("[INFO]: Compiling model....")
     optimizer = RMSprop(lr=learning_rate)
-    #optimizer = SGD(lr=learning_rate, decay=learning_rate/batch_size, momentum=0.9, nesterov=True)
+    #optimizer = SGD(lr=learning_rate, decay=learning_rate/epcho, momentum=0.9, nesterov=True)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
 
     # construct the set of callbacks
@@ -85,12 +85,44 @@ def finetune_deep(modelName, trainGen, valGen, batch_size, output_path, saved_mo
     for layer in model.layers:
         layer.trainable = True
 
-    optimizer = SGD(lr=learning_rate, decay=learning_rate/batch_size, momentum=0.9, nesterov=True)
+    optimizer = SGD(lr=learning_rate, decay=learning_rate/epcho, momentum=0.9, nesterov=True)
     model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
 
     print("[INFO]: Fine-tuning model....")
     H = model.fit_generator(trainGen.generator(), 
         validation_data=valGen.generator(), 
         steps_per_epoch=trainGen.numImages//batch_size, 
+        validation_steps=valGen.numImages//batch_size, 
+        callbacks=callbacks, epochs=epcho, verbose=1)
+
+
+def custom_model(modelName, trainGen, valGen, batch_size, output_path, saved_model, learning_rate, epcho, model_exist):
+    
+    if model_exist:
+        print("[INFO]: Loadign model....")
+        model = load_model(saved_model)
+    else:
+        if modelName == 'RootNet':
+            model = RootNet.build(32, 32, 3, 2)
+
+    # compile our model
+    print("[INFO]: Compiling model....")
+    optimizer = SGD(lr=learning_rate, decay=learning_rate/epcho, momentum=0.9, nesterov=True)
+    #optimizer = RMSprop(lr=learning_rate)
+    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
+
+    # construct the set of callbacks
+    figure_path = os.path.sep.join([output_path, '{}_{}.png'.format(modelName, os.getpid())])
+    json_path = os.path.sep.join([output_path, "{}_{}.json".format(modelName, os.getpid())])
+    monitor = TrainingMonitor(figure_path, json_path)
+    checkpoint = ModelCheckpoint(saved_model, monitor="val_loss", mode="min", save_best_only=True, verbose=1)
+    callbacks = [monitor, checkpoint]
+    
+    # train the head of the network for a few epoches (all other laysers are frozen) -- this will allow the new FC layers to 
+    # start to become initialize with actual "learned" values versus pure random 
+    print("[INFO]: Training head....")
+    H = model.fit_generator(trainGen.generator(), 
+        validation_data=valGen.generator(), 
+        steps_per_epoch=trainGen.numImages//batch_size,
         validation_steps=valGen.numImages//batch_size, 
         callbacks=callbacks, epochs=epcho, verbose=1)

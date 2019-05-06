@@ -8,32 +8,30 @@ from preprocessor import MeanPreprocessor
 from preprocessor import ImageToArrayPreprocessor
 import config
 import json
-from finetune import finetune_shallow, finetune_deep
+from finetune import custom_model
 import os
 import argparse
 
-def tain(finetune_depth):
-    pre_train_models = config.PRE_TRAIN_MODELS
+def tain(model_exist):
+    train_models = config.TRAIN_MODELS
     image_size = config.IMAGES_SIZE
     batch_size = config.BATCH_SIZE
     output_path = config.OUTPUT_PATH
-    learning_rate_shallow = config.LEARNING_RATE_SHALLOW
-    learning_rate_deep = config.LEARNING_RATE_DEEP
-    epcho_shallow = config.EPCHO_SHALLOW
-    epcho_deep = config.EPCHO_DEEP
+    learning_rate = config.LEARNING_RATE
+    epcho = config.EPCHO
     # construct the training image generator for data augmentation
     aug = image_augment()
     
     # load the RGB means for the training set
     means = json.loads(open(config.DATASET_MEAN).read())
 
-    for pre_train_model in pre_train_models:
+    for train_model in train_models:
     
-        saved_model = os.path.sep.join([output_path, '{}_model.hdf5'.format(pre_train_model)])
+        saved_model = os.path.sep.join([output_path, '{}_model.hdf5'.format(train_model)])
 
         # initialize the image preprocessors
-        sp = SimplePreprocessor(image_size[pre_train_model], image_size[pre_train_model])
-        pp = PatchPreprocessor(image_size[pre_train_model], image_size[pre_train_model])
+        sp = SimplePreprocessor(image_size[train_model], image_size[train_model])
+        pp = PatchPreprocessor(image_size[train_model], image_size[train_model])
         mp = MeanPreprocessor(means['R'], means['G'], means['B'])
         itap = ImageToArrayPreprocessor()
 
@@ -43,12 +41,8 @@ def tain(finetune_depth):
         valGen = HDF5DatasetGenerator(config.VAL_HDF5, batchSize=batch_size,
             preprocessors=[sp, mp, itap], classes=config.NUM_CLASSES)
 
-        if finetune_depth == 'shallow':
-            finetune_shallow(pre_train_model, trainGen, valGen, batch_size, output_path, 
-                saved_model, learning_rate_shallow, epcho_shallow)
-        elif finetune_depth == 'deep':
-            finetune_deep(pre_train_model, trainGen, valGen, batch_size, output_path, 
-                saved_model, learning_rate_deep, epcho_deep)
+        custom_model(train_model, trainGen, valGen, batch_size, output_path, 
+                saved_model, learning_rate, epcho, model_exist)
 
         trainGen.close()
         valGen.close()
@@ -57,6 +51,6 @@ def tain(finetune_depth):
     
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
-    ap.add_argument("-d", "--depth", required=True, help="shallow or deep")
+    ap.add_argument('-e', '--is_model_exist', default=False, type=lambda x: (str(x).lower() in ['true', '1', 'yes']))
     args = vars(ap.parse_args())
-    tain(finetune_depth=args['depth'])
+    tain(model_exist=args['is_model_exist'])

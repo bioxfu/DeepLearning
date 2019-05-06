@@ -11,7 +11,7 @@ import progressbar
 import json
 import os
 
-pre_train_model = config.PRE_TRAIN_MODELS[0]
+pre_train_model = config.TRAIN_MODELS[0]
 image_size = config.IMAGES_SIZE
 batch_size = config.BATCH_SIZE
 output_path = config.OUTPUT_PATH
@@ -46,7 +46,6 @@ print("[INFO] rank-1: {:.2f}%".format(rank1 * 100))
 print("[INFO] rank-5: {:.2f}%".format(rank5 * 100))
 model_accuracy.write("[INFO] rank-1: {:.2f}%\n".format(rank1 * 100))
 model_accuracy.write("[INFO] rank-5: {:.2f}%\n".format(rank5 * 100))
-()
 testGen.close()
 
 # re-initialzie the testing set generator excluding the SimplePreprocessor
