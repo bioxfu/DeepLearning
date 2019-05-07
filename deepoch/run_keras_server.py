@@ -27,7 +27,7 @@ import tensorflow as tf
 graph = tf.get_default_graph()
 
 
-pre_train_model = config.PRE_TRAIN_MODELS[0]
+pre_train_model = config.TRAIN_MODELS[0]
 image_size = config.IMAGES_SIZE[pre_train_model]
 output_path = config.OUTPUT_PATH
 saved_model = os.path.sep.join([output_path, '{}_model.hdf5'.format(pre_train_model)])
